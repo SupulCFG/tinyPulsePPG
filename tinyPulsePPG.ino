@@ -319,8 +319,12 @@ void printValuesBT() {
   blueToothSerial.print(beatAvg);
   blueToothSerial.print("_");
   blueToothSerial.print(SPO2);
+  blueToothSerial.print("_");
+  blueToothSerial.print(SPO2f);
   blueToothSerial.println("x");
   blueToothSerial.flush();
+
+  delay(100);
 }
 
 void setupBlueToothConnection()
