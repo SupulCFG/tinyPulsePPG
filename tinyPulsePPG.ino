@@ -5,7 +5,7 @@
 * j.n.magee 15-10-2019
 */
 
-// Removed Watchdog Timer
+// Lib Update
 //
 #include <SoftwareSerial.h>
 #define RxD 3
