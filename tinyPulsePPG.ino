@@ -51,41 +51,41 @@ const uint8_t spo2_table[184] PROGMEM =
           3, 2, 1 } ;
 
 
-int getVCC() {
-   return min(11264/analogRead(12),99); 
-}
+//int getVCC() {
+//   return min(11264/analogRead(12),99); 
+//}
 
 int  beatAvg;
 int  SPO2, SPO2f;
 //int  voltage;
 bool filter_for_graph = false;
-bool draw_Red = false;
-uint8_t pcflag =0;
+//bool draw_Red = false;
+//uint8_t pcflag =0;
 uint8_t istate = 0;
 //uint8_t sleep_counter = 0;
 
-ISR(PCINT0_vect){
-    pcflag = 1;
-}
+//ISR(PCINT0_vect){
+//    pcflag = 1;
+//}
 
-void checkbutton(){
-    if (pcflag && !digitalRead(BUTTON)) {
-      istate = (istate +1) % 4;
-      filter_for_graph = istate & 0x01;
-      draw_Red = istate & 0x02;
-      EEPROM.write(OPTIONS, filter_for_graph);
-      EEPROM.write(OPTIONS+1, draw_Red);
-    }
-    pcflag = 0;
-}
+//void checkbutton(){
+//    if (pcflag && !digitalRead(BUTTON)) {
+//      istate = (istate +1) % 4;
+//      filter_for_graph = istate & 0x01;
+//      draw_Red = istate & 0x02;
+//      EEPROM.write(OPTIONS, filter_for_graph);
+//      EEPROM.write(OPTIONS+1, draw_Red);
+//    }
+//    pcflag = 0;
+//}
 
 void setup(void) {
-  MCUSR = 0;
-  wdt_disable();
-  pinMode(LED, OUTPUT);
-  pinMode(BUTTON, INPUT_PULLUP);
+//  MCUSR = 0;
+//  wdt_disable();
+//  pinMode(LED, OUTPUT);
+//  pinMode(BUTTON, INPUT_PULLUP);
   filter_for_graph = EEPROM.read(OPTIONS);
-  draw_Red = EEPROM.read(OPTIONS+1);
+//  draw_Red = EEPROM.read(OPTIONS+1);
 
   delay(3000); 
   if (!sensor.begin())  {
@@ -99,7 +99,7 @@ void setup(void) {
 
 long lastBeat = 0;    //Time of the last beat 
 long displaytime = 0; //Time of the last display update  //------------------------------------------------------------------------------//
-bool led_on = false;
+//bool led_on = false;
 
 
 void loop()  {
@@ -111,7 +111,7 @@ void loop()  {
     sensor.nextSample();
     if (irValue<5000) {
 //        voltage = getVCC();
-        checkbutton();
+//        checkbutton();
 //        draw_oled(sleep_counter<=70 ? 1 : 4); // finger not down message
         delay(100);
 //        ++sleep_counter;
@@ -138,12 +138,12 @@ void loop()  {
         // invert waveform to get classical BP waveshape
 //        wave.record(draw_Red ? -Red_signal : -IR_signal ); 
         // check IR or Red for heartbeat     
-        if (draw_Red ? beatRed : beatIR){
+//        if (draw_Red ? beatRed : beatIR){
             long btpm = 60000/(now - lastBeat);
             if (btpm > 0 && btpm < 200) beatAvg = bpm.filter((int16_t)btpm);
             lastBeat = now; 
-            digitalWrite(LED, HIGH); 
-            led_on = true;
+//            digitalWrite(LED, HIGH); 
+//            led_on = true;
             // compute SpO2 ratio
             long numerator   = (pulseRed.avgAC() * pulseIR.avgDC())/256;
             long denominator = (pulseRed.avgDC() * pulseIR.avgAC())/256;
@@ -153,7 +153,7 @@ void loop()  {
             // from table
             if ((RX100>=0) && (RX100<184))
               SPO2 = pgm_read_byte_near(&spo2_table[RX100]); 
-        }
+//        }
         // update display every 50 ms if fingerdown
 //        if (now-displaytime>50) {
 //            displaytime = now;
@@ -163,8 +163,8 @@ void loop()  {
     }
     //???????????????????????????????????????????????????????????????????????????????????????????????????????????//
     // flash led for 25 ms
-    if (led_on && (now - lastBeat)>25){
-        digitalWrite(LED, LOW);
-        led_on = false;
-     }
+//    if (led_on && (now - lastBeat)>25){
+//        digitalWrite(LED, LOW);
+//        led_on = false;
+//     }
 }
