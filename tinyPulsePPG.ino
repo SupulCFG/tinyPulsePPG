@@ -5,6 +5,10 @@
 * j.n.magee 15-10-2019
 */
 
+// Removed CLASS waweform
+
+
+
 #include "ssd1306h.h"
 #include "MAX30102.h"
 #include "Pulse.h"
@@ -70,56 +74,56 @@ int getVCC() {
 /*
  *   Record, scale  and display PPG Wavefoem
  */
-const uint8_t MAXWAVE = 72;
-
-class Waveform {
-  public:
-    Waveform(void) {wavep = 0;}
-
-      void record(int waveval) {
-        waveval = waveval/8;         // scale to fit in byte
-        waveval += 128;              //shift so entired waveform is +ve
-        waveval = waveval<0? 0 : waveval;
-        waveform[wavep] = (uint8_t) (waveval>255)?255:waveval; 
-        wavep = (wavep+1) % MAXWAVE;
-      }
-  
-      void scale() {
-        uint8_t maxw = 0;
-        uint8_t minw = 255;
-        for (int i=0; i<MAXWAVE; i++) { 
-          maxw = waveform[i]>maxw?waveform[i]:maxw;
-          minw = waveform[i]<minw?waveform[i]:minw;
-        }
-        uint8_t scale8 = (maxw-minw)/4 + 1;  //scale * 8 to preserve precision
-        uint8_t index = wavep;
-        for (int i=0; i<MAXWAVE; i++) {
-          disp_wave[i] = 31-((uint16_t)(waveform[index]-minw)*8)/scale8;
-          index = (index + 1) % MAXWAVE;
-        }
-      }
-
-      void draw(uint8_t X) {
-       for (int i=0; i<MAXWAVE; i++) {
-        uint8_t y = disp_wave[i];
-//        oled.drawPixel(X+i, y);
-        if (i<MAXWAVE-1) {
-          uint8_t nexty = disp_wave[i+1];
-          if (nexty>y) {
-//            for (uint8_t iy = y+1; iy<nexty; ++iy)  oled.drawPixel(X+i, iy);
-          } else if (nexty<y) {
-//            for (uint8_t iy = nexty+1; iy<y; ++iy)  oled.drawPixel(X+i, iy);
-          }
-        }
-      }  
-    }
-
-private:
-    uint8_t waveform[MAXWAVE];
-    uint8_t disp_wave[MAXWAVE];
-    uint8_t wavep = 0;
-    
-} wave;
+//const uint8_t MAXWAVE = 72;
+//
+//class Waveform {
+//  public:
+//    Waveform(void) {wavep = 0;}
+//
+//      void record(int waveval) {
+//        waveval = waveval/8;         // scale to fit in byte
+//        waveval += 128;              //shift so entired waveform is +ve
+//        waveval = waveval<0? 0 : waveval;
+//        waveform[wavep] = (uint8_t) (waveval>255)?255:waveval; 
+//        wavep = (wavep+1) % MAXWAVE;
+//      }
+//  
+//      void scale() {
+//        uint8_t maxw = 0;
+//        uint8_t minw = 255;
+//        for (int i=0; i<MAXWAVE; i++) { 
+//          maxw = waveform[i]>maxw?waveform[i]:maxw;
+//          minw = waveform[i]<minw?waveform[i]:minw;
+//        }
+//        uint8_t scale8 = (maxw-minw)/4 + 1;  //scale * 8 to preserve precision
+//        uint8_t index = wavep;
+//        for (int i=0; i<MAXWAVE; i++) {
+//          disp_wave[i] = 31-((uint16_t)(waveform[index]-minw)*8)/scale8;
+//          index = (index + 1) % MAXWAVE;
+//        }
+//      }
+//
+//      void draw(uint8_t X) {
+//       for (int i=0; i<MAXWAVE; i++) {
+//        uint8_t y = disp_wave[i];
+////        oled.drawPixel(X+i, y);
+//        if (i<MAXWAVE-1) {
+//          uint8_t nexty = disp_wave[i+1];
+//          if (nexty>y) {
+////            for (uint8_t iy = y+1; iy<nexty; ++iy)  oled.drawPixel(X+i, iy);
+//          } else if (nexty<y) {
+////            for (uint8_t iy = nexty+1; iy<y; ++iy)  oled.drawPixel(X+i, iy);
+//          }
+//        }
+//      }  
+//    }
+//
+//private:
+//    uint8_t waveform[MAXWAVE];
+//    uint8_t disp_wave[MAXWAVE];
+//    uint8_t wavep = 0;
+//    
+//} wave;
 
 int  beatAvg;
 int  SPO2, SPO2f;
@@ -264,7 +268,7 @@ void loop()  {
            beatIR =  pulseIR.isBeat(IR_signal);
         }
         // invert waveform to get classical BP waveshape
-        wave.record(draw_Red ? -Red_signal : -IR_signal ); 
+//        wave.record(draw_Red ? -Red_signal : -IR_signal ); 
         // check IR or Red for heartbeat     
         if (draw_Red ? beatRed : beatIR){
             long btpm = 60000/(now - lastBeat);
@@ -285,7 +289,7 @@ void loop()  {
         // update display every 50 ms if fingerdown
         if (now-displaytime>50) {
             displaytime = now;
-            wave.scale();
+//            wave.scale();
             //draw_oled(2);
         }
     }
