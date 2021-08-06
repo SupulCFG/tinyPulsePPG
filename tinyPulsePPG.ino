@@ -5,7 +5,7 @@
 * j.n.magee 15-10-2019
 */
 
-// Lib Update
+// BT
 //
 #include <SoftwareSerial.h>
 #define RxD 3
@@ -39,7 +39,7 @@ Pulse pulseRed;
 MAFilter bpm;
 
 #define LED 1
-#define BUTTON 3
+//#define BUTTON 3
 #define OPTIONS 7
 
 static const uint8_t heart_bits[] PROGMEM = { 0x00, 0x00, 0x38, 0x38, 0x7c, 0x7c, 0xfe, 0xfe, 0xfe, 0xff, 
@@ -144,16 +144,16 @@ uint8_t sleep_counter = 0;
 //    pcflag = 1;
 //}
 
-void checkbutton(){
-    if (pcflag && !digitalRead(BUTTON)) {
-      istate = (istate +1) % 4;
-      filter_for_graph = istate & 0x01;
-      draw_Red = istate & 0x02;
-      EEPROM.write(OPTIONS, filter_for_graph);
-      EEPROM.write(OPTIONS+1, draw_Red);
-    }
-    pcflag = 0;
-}
+//void checkbutton(){
+//    if (pcflag && !digitalRead(BUTTON)) {
+//      istate = (istate +1) % 4;
+//      filter_for_graph = istate & 0x01;
+//      draw_Red = istate & 0x02;
+//      EEPROM.write(OPTIONS, filter_for_graph);
+//      EEPROM.write(OPTIONS+1, draw_Red);
+//    }
+//    pcflag = 0;
+//}
 
 //void go_sleep() {
 ////    oled.fill(0);
@@ -215,10 +215,12 @@ void checkbutton(){
 //}
 
 void setup(void) {
+  setupBlueToothConnection();
+  
   MCUSR = 0;
 //  wdt_disable();
   pinMode(LED, OUTPUT);
-  pinMode(BUTTON, INPUT_PULLUP);
+//  pinMode(BUTTON, INPUT_PULLUP);
   filter_for_graph = EEPROM.read(OPTIONS);
   draw_Red = EEPROM.read(OPTIONS+1);
 //  oled.init();
@@ -249,7 +251,7 @@ void loop()  {
     sensor.nextSample();
     if (irValue<5000) {
         voltage = getVCC();
-        checkbutton();
+//        checkbutton();
 //        draw_oled(sleep_counter<=70 ? 1 : 4); // finger not down message
         delay(100);
         ++sleep_counter;
@@ -304,4 +306,26 @@ void loop()  {
         digitalWrite(LED, LOW);
         led_on = false;
      }
+
+     printValuesBT();
+}
+
+void printValuesBT() {
+
+  //  if(hr < 10) return;
+  if (beatAvg < 100)
+    blueToothSerial.print("0");
+
+  blueToothSerial.print(beatAvg);
+  blueToothSerial.print("_");
+  blueToothSerial.print(SPO2);
+  blueToothSerial.println("x");
+  blueToothSerial.flush();
+}
+
+void setupBlueToothConnection()
+{
+  blueToothSerial.begin(9600); //Set BluetoothBee BaudRate to default baud rate 38400
+  //  blueToothSerial.flush();
+  delay(2000); // This delay is required.
 }
