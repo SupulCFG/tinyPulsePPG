@@ -211,7 +211,7 @@ void setup(void) {
   pinMode(BUTTON, INPUT_PULLUP);
   filter_for_graph = EEPROM.read(OPTIONS);
   draw_Red = EEPROM.read(OPTIONS+1);
-//  oled.init();
+  oled.init();
 //  oled.fill(0x00);
 //  draw_oled(3);
   delay(3000); 
