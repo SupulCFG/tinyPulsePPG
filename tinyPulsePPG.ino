@@ -15,7 +15,7 @@
 
 SoftwareSerial blueToothSerial(RxD, TxD);
 
-#include "ssd1306h.h"
+//#include "ssd1306h.h"
 #include "MAX30102.h"
 #include "Pulse.h"
 #include <avr/pgmspace.h>
@@ -32,7 +32,7 @@ SoftwareSerial blueToothSerial(RxD, TxD);
 //#endif
 
 
-SSD1306 oled; 
+//SSD1306 oled; 
 MAX30102 sensor;
 Pulse pulseIR;
 Pulse pulseRed;
@@ -221,7 +221,7 @@ void setup(void) {
   pinMode(BUTTON, INPUT_PULLUP);
   filter_for_graph = EEPROM.read(OPTIONS);
   draw_Red = EEPROM.read(OPTIONS+1);
-  oled.init();
+//  oled.init();
 //  oled.fill(0x00);
 //  draw_oled(3);
   delay(3000); 

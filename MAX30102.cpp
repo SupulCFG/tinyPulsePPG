@@ -16,7 +16,7 @@ MAX30102::MAX30102() {
 }
 
 boolean MAX30102::begin(uint8_t i2caddr) {
-//   TinyI2C.init();
+   TinyI2C.init();
 
   
   _i2caddr = i2caddr;
