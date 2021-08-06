@@ -5,25 +5,31 @@
 * j.n.magee 15-10-2019
 */
 
-// Removed CLASS waweform
+// Removed Watchdog Timer
+//
+#include <SoftwareSerial.h>
+#define RxD 3
+#define TxD 4
 
+#define DEBUG_ENABLED  1
 
+SoftwareSerial blueToothSerial(RxD, TxD);
 
 #include "ssd1306h.h"
 #include "MAX30102.h"
 #include "Pulse.h"
 #include <avr/pgmspace.h>
 #include <EEPROM.h>
-#include <avr/sleep.h>
-#include <avr/wdt.h>
+//#include <avr/sleep.h>
+//#include <avr/wdt.h>
 
 // Routines to clear and set bits 
-#ifndef cbi
-#define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
-#endif
-#ifndef sbi
-#define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
-#endif
+//#ifndef cbi
+//#define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
+//#endif
+//#ifndef sbi
+//#define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
+//#endif
 
 
 SSD1306 oled; 
@@ -134,9 +140,9 @@ uint8_t pcflag =0;
 uint8_t istate = 0;
 uint8_t sleep_counter = 0;
 
-ISR(PCINT0_vect){
-    pcflag = 1;
-}
+//ISR(PCINT0_vect){
+//    pcflag = 1;
+//}
 
 void checkbutton(){
     if (pcflag && !digitalRead(BUTTON)) {
@@ -149,23 +155,23 @@ void checkbutton(){
     pcflag = 0;
 }
 
-void go_sleep() {
-//    oled.fill(0);
-//    oled.off();
+//void go_sleep() {
+////    oled.fill(0);
+////    oled.off();
+////    delay(10);
+//    sensor.off();
 //    delay(10);
-    sensor.off();
-    delay(10);
-    cbi(ADCSRA, ADEN);  // disable adc
-    delay(10);
-    pinMode(0,INPUT);
-    pinMode(2,INPUT);
-    set_sleep_mode(SLEEP_MODE_PWR_DOWN);     
-    sleep_mode();  // sleep until button press 
-    // cause reset
-    wdt_enable(WDTO_15MS);
-    wdt_reset();
-    while(1);
-}
+//    cbi(ADCSRA, ADEN);  // disable adc
+//    delay(10);
+//    pinMode(0,INPUT);
+//    pinMode(2,INPUT);
+//    set_sleep_mode(SLEEP_MODE_PWR_DOWN);     
+//    sleep_mode();  // sleep until button press 
+//    // cause reset
+//    wdt_enable(WDTO_15MS);
+//    wdt_reset();
+//    while(1);
+//}
 
 //void draw_oled(int msg) {
 //    oled.firstPage();
@@ -210,7 +216,7 @@ void go_sleep() {
 
 void setup(void) {
   MCUSR = 0;
-  wdt_disable();
+//  wdt_disable();
   pinMode(LED, OUTPUT);
   pinMode(BUTTON, INPUT_PULLUP);
   filter_for_graph = EEPROM.read(OPTIONS);
@@ -224,9 +230,9 @@ void setup(void) {
     while (1);
   }
   sensor.setup(); 
-  sbi(GIMSK, PCIE); // set up pin change interrupt
-  sbi(PCMSK, PCINT3);
-  sei();
+//  sbi(GIMSK, PCIE); // set up pin change interrupt
+//  sbi(PCMSK, PCINT3);
+//  sei();
 }
 
 long lastBeat = 0;    //Time of the last beat 
@@ -248,7 +254,7 @@ void loop()  {
         delay(100);
         ++sleep_counter;
         if (sleep_counter>100) {
-          go_sleep(); 
+//          go_sleep(); 
           sleep_counter = 0;
         }
     } else {

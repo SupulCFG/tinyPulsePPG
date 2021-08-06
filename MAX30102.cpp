@@ -16,6 +16,9 @@ MAX30102::MAX30102() {
 }
 
 boolean MAX30102::begin(uint8_t i2caddr) {
+//   TinyI2C.init();
+
+  
   _i2caddr = i2caddr;
   if (readRegister8(REG_PART_ID) != MAX_30102_ID)  return false; 
   return true;
