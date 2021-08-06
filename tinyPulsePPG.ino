@@ -55,16 +55,16 @@ int getVCC() {
    return min(11264/analogRead(12),99); 
 }
 
-void print_digit(int x, int y, long val, char c=' ', uint8_t field = 3,
-                    const int BIG = 2){  
-    uint8_t ff = field;
-    do { 
-        char ch = (val!=0) ? val%10+'0': c;
-        oled.drawChar( x+BIG*(ff-1)*6, y, ch, BIG);
-        val = val/10; 
-        --ff;
-    } while (ff>0);
-}
+//void print_digit(int x, int y, long val, char c=' ', uint8_t field = 3,
+//                    const int BIG = 2){  
+//    uint8_t ff = field;
+//    do { 
+//        char ch = (val!=0) ? val%10+'0': c;
+//        oled.drawChar( x+BIG*(ff-1)*6, y, ch, BIG);
+//        val = val/10; 
+//        --ff;
+//    } while (ff>0);
+//}
 
 
 /*
@@ -102,13 +102,13 @@ class Waveform {
       void draw(uint8_t X) {
        for (int i=0; i<MAXWAVE; i++) {
         uint8_t y = disp_wave[i];
-        oled.drawPixel(X+i, y);
+//        oled.drawPixel(X+i, y);
         if (i<MAXWAVE-1) {
           uint8_t nexty = disp_wave[i+1];
           if (nexty>y) {
-            for (uint8_t iy = y+1; iy<nexty; ++iy)  oled.drawPixel(X+i, iy);
+//            for (uint8_t iy = y+1; iy<nexty; ++iy)  oled.drawPixel(X+i, iy);
           } else if (nexty<y) {
-            for (uint8_t iy = nexty+1; iy<y; ++iy)  oled.drawPixel(X+i, iy);
+//            for (uint8_t iy = nexty+1; iy<y; ++iy)  oled.drawPixel(X+i, iy);
           }
         }
       }  
@@ -146,9 +146,9 @@ void checkbutton(){
 }
 
 void go_sleep() {
-    oled.fill(0);
-    oled.off();
-    delay(10);
+//    oled.fill(0);
+//    oled.off();
+//    delay(10);
     sensor.off();
     delay(10);
     cbi(ADCSRA, ADEN);  // disable adc
@@ -211,8 +211,8 @@ void setup(void) {
   pinMode(BUTTON, INPUT_PULLUP);
   filter_for_graph = EEPROM.read(OPTIONS);
   draw_Red = EEPROM.read(OPTIONS+1);
-  oled.init();
-  oled.fill(0x00);
+//  oled.init();
+//  oled.fill(0x00);
 //  draw_oled(3);
   delay(3000); 
   if (!sensor.begin())  {
